@@ -11,13 +11,24 @@ async function getWeatherData (location, unit) {
 
     // Objects with data needed
     const currentConditions = weatherData.currentConditions;
-    // Retrieving important data
+    const todaysConditions = weatherData.days[0];
+
+    //getting required data
     const temp = currentConditions.temp;
+    const feelsLike = currentConditions.feelslike;
     const conditions = currentConditions.conditions;
     const humidity = currentConditions.humidity;
-
-    console.log(temp, conditions, humidity);
+    const maxTemp = todaysConditions.tempmax;
+    const minTemp = todaysConditions.tempmin;
+    const dailyConditions = todaysConditions.description;
+    
+    return {
+        temp,
+        feelsLike,
+        conditions,
+        humidity,
+        maxTemp,
+        minTemp,
+        dailyConditions
+    }
 }
-
-
-const weatherData = getWeatherData(`singapore`, `metric`);
