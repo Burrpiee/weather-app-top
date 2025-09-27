@@ -1,0 +1,65 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    line-height: 1.5;
+    height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Verdana', serif;
+
+    display: grid;
+    grid-template-rows: 80px 1fr;
+}
+
+input, button, textarea, select {
+    font: inherit;
+    border: 0;
+    border-radius: 4px;
+    height: 30px;
+}
+
+button,select {
+    padding: 0 8px;
+}
+
+.header {
+    display: flex;
+    background-color: gray;
+    gap: 2rem;
+    padding: 0.6rem;
+    padding-right: 2rem;
+}
+
+.app-logo {
+    filter: invert(1);
+    margin-left: 0.5rem;
+}
+
+.weather-form {
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.location-container {
+    display: flex;
+    flex-grow: 1;
+    gap: 0.5rem;
+}
+
+#location-input {
+    flex-grow: 1;
+    padding: 2px;
+    min-width: 150px;
+}
+
+label {
+    color: white;
+    font-weight: bold;
+    font-size: 1.05rem;
+}
