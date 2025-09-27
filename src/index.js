@@ -15,12 +15,13 @@ async function getWeatherData (location, unit) {
 
     //getting required data
     const temp = currentConditions.temp;
-    const feelsLike = currentConditions.feelslike;
     const conditions = currentConditions.conditions;
+    const feelsLike = currentConditions.feelslike;
     const humidity = currentConditions.humidity;
     const maxTemp = todaysConditions.tempmax;
     const minTemp = todaysConditions.tempmin;
-    const dailyConditions = todaysConditions.description;
+    const conditionForecast = todaysConditions.description;
+    const address = weatherData.resolvedAddress;
     
     return {
         temp,
@@ -29,6 +30,9 @@ async function getWeatherData (location, unit) {
         humidity,
         maxTemp,
         minTemp,
-        dailyConditions
+        conditionForecast,
+        address
     }
 }
+
+getWeatherData('london', 'metric');
