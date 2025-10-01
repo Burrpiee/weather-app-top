@@ -4,7 +4,16 @@ const dom = {};
 
 const cacheDomElements = (() => {
     dom.weatherForm = document.getElementById('weather-form');
+    dom.addressDisplay = document.getElementById('address');
     dom.tempDisplay = document.getElementById('temp');
+    dom.conditionsDisplay = document.getElementById('conditions');
+    dom.conditionForecastDisplay = document.getElementById('condition-forecast');
+    dom.feelsLikeTempDisplay = document.getElementById('feels-like-temp');
+    dom.humidityDisplay = document.getElementById('humidity');
+    dom.minTempDisplay = document.getElementById('min-temp');
+    dom.maxTempDisplay = document.getElementById('max-temp');
+    dom.uvIndexDisplay = document.getElementById('uv-index');
+    dom.visibilityDisplay = document.getElementById('visibility');
 })();
 
 dom.weatherForm.addEventListener('submit', async (e) => {
@@ -20,7 +29,16 @@ dom.weatherForm.addEventListener('submit', async (e) => {
 
     const data = await getWeatherData(location, unit);
     if (data) {
+        dom.addressDisplay.textContent = data.address;
         dom.tempDisplay.textContent = data.temp + '°';
+        dom.conditionsDisplay.textContent = data.conditions;
+        dom.conditionForecastDisplay.textContent = data.conditionForecast;
+        dom.feelsLikeTempDisplay.textContent = data.feelsLike + '°';
+        dom.humidityDisplay.textContent = data.humidity + '%';
+        dom.minTempDisplay.textContent = data.minTemp + '°';
+        dom.maxTempDisplay.textContent = data.maxTemp + '°';
+        dom.uvIndexDisplay.textContent = data.uvIndex;
+        dom.visibilityDisplay.textContent = data.visibility;
     }
 });
 
@@ -49,13 +67,14 @@ async function getWeatherData (location, unit) {
             feelsLike: currentConditions.feelslike,
             humidity: currentConditions.humidity,
             uvIndex: currentConditions.uvindex,
-            visibilty: currentConditions.visibility,
+            visibility: currentConditions.visibility,
             maxTemp: todaysConditions.tempmax,
             minTemp: todaysConditions.tempmin,
             conditionForecast: todaysConditions.description,
             address: weatherData.resolvedAddress,
             dateTime: currentConditions.datetime
         };
+
     } catch (error) {
         console.error("Failed to fetch weather data:", error);
         alert(`Could nmot retrieve weather data: ${error.message}`);
