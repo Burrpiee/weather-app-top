@@ -14,7 +14,7 @@ body {
     grid-template-rows: 80px 1fr;
 
     /* Background image */
-    background-image: url(images/backgrounds/day-norain.jpg);
+    background-image: url(images/backgrounds/day-clear.jpg);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -89,7 +89,7 @@ label {
     color: white;
     
     background-color: rgba(0,0,0, 0.3);
-    max-width: 500px;
+    width: 500px;
     max-height: 80%;
     border-radius: 1.5rem;
     padding: 2rem;

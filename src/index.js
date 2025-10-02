@@ -39,6 +39,23 @@ dom.weatherForm.addEventListener('submit', async (e) => {
         dom.maxTempDisplay.textContent = data.maxTemp + '°';
         dom.uvIndexDisplay.textContent = data.uvIndex;
         dom.visibilityDisplay.textContent = data.visibility;
+        
+        //Background rendering
+        const hourString = data.dateTime.substring(0, 2);
+        const hour = parseInt(hourString);
+        const backgroundBaseName = getBackGroundPath(hour, data.icon);
+        
+        try {
+            //Dynamic import
+            const imageModule = await import (
+                /* webpackInclude: /\.jpg$/ */
+                `./images/backgrounds/${backgroundBaseName}.jpg`
+            );
+            document.body.style.backgroundImage = `url(${imageModule.default})`;
+        } catch (error) {
+            console.error(`Error loading background image for ${backgroundBaseName}.jpg:`, error);
+            document.body.style.backgroundImage = `url(images/backgrounds/default-fallback.jpg)`;
+        }
     }
 });
 
@@ -72,7 +89,8 @@ async function getWeatherData (location, unit) {
             minTemp: todaysConditions.tempmin,
             conditionForecast: todaysConditions.description,
             address: weatherData.resolvedAddress,
-            dateTime: currentConditions.datetime
+            dateTime: currentConditions.datetime,
+            icon: currentConditions.icon
         };
 
     } catch (error) {
@@ -80,6 +98,44 @@ async function getWeatherData (location, unit) {
         alert(`Could nmot retrieve weather data: ${error.message}`);
         return null
     }
-}
+};
+
+function getBackGroundPath (hour, icon) {
+    let timePrefix = ''
+    let weatherSuffix = 'clear';
+
+    if (hour >= 6 && hour <= 18) { //Daytime
+        timePrefix = 'day';
+    } else { //nighttime
+        timePrefix = 'night';
+    }
+
+    switch (icon) {
+        case 'snow':
+            weatherSuffix = 'snow';
+            break;
+        case 'rain':
+            weatherSuffix = 'rain';
+            break;
+        case 'foggy':
+            weatherSuffix = 'fog';
+            break;
+        case 'cloudy':
+        case 'partly-cloudy-day':
+        case 'partly-cloudy-night':
+            weatherSuffix = 'cloudy';
+            break;
+        case 'wind':
+        case 'clear-day':
+        case 'clear-night':
+            weatherSuffix = 'clear';
+            break;
+        default:
+            weatherSuffix = 'clear';
+            break;
+    }
+    
+    return `${timePrefix}-${weatherSuffix}`;
+};
 
 // getWeatherData('london', 'metric');
