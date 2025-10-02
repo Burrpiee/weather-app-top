@@ -51,7 +51,9 @@ dom.weatherForm.addEventListener('submit', async (e) => {
                 /* webpackInclude: /\.jpg$/ */
                 `./images/backgrounds/${backgroundBaseName}.jpg`
             );
+            console.log(imageModule);
             document.body.style.backgroundImage = `url(${imageModule.default})`;
+
         } catch (error) {
             console.error(`Error loading background image for ${backgroundBaseName}.jpg:`, error);
             document.body.style.backgroundImage = `url(images/backgrounds/default-fallback.jpg)`;
