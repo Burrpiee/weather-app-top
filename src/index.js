@@ -1,6 +1,8 @@
 import "./styles.css";
 
 const dom = {};
+let loadingStartTime;
+let loadingTimeinterval;
 
 const cacheDomElements = (() => {
     dom.weatherForm = document.getElementById('weather-form');
@@ -14,6 +16,8 @@ const cacheDomElements = (() => {
     dom.maxTempDisplay = document.getElementById('max-temp');
     dom.uvIndexDisplay = document.getElementById('uv-index');
     dom.visibilityDisplay = document.getElementById('visibility');
+    dom.loadingOverlay = document.getElementById('loading-overlay');
+    dom.loadingTimer = document.getElementById('loading-timer');
 })();
 
 dom.weatherForm.addEventListener('submit', async (e) => {
@@ -27,38 +31,46 @@ dom.weatherForm.addEventListener('submit', async (e) => {
         return;
     }
 
-    const data = await getWeatherData(location, unit);
-    if (data) {
-        dom.addressDisplay.textContent = data.address;
-        dom.tempDisplay.textContent = data.temp + '°';
-        dom.conditionsDisplay.textContent = data.conditions;
-        dom.conditionForecastDisplay.textContent = data.conditionForecast;
-        dom.feelsLikeTempDisplay.textContent = data.feelsLike + '°';
-        dom.humidityDisplay.textContent = data.humidity + '%';
-        dom.minTempDisplay.textContent = data.minTemp + '°';
-        dom.maxTempDisplay.textContent = data.maxTemp + '°';
-        dom.uvIndexDisplay.textContent = data.uvIndex;
-        dom.visibilityDisplay.textContent = data.visibility;
-        
-        //Background rendering
-        const hourString = data.dateTime.substring(0, 2);
-        const hour = parseInt(hourString);
-        const backgroundBaseName = getBackGroundPath(hour, data.icon);
-        
-        try {
-            //Dynamic import
-            const imageModule = await import (
-                /* webpackInclude: /\.jpg$/ */
-                `./images/backgrounds/${backgroundBaseName}.jpg`
-            );
-            console.log(imageModule);
-            document.body.style.backgroundImage = `url(${imageModule.default})`;
+    showloading();
 
-        } catch (error) {
-            console.error(`Error loading background image for ${backgroundBaseName}.jpg:`, error);
-            document.body.style.backgroundImage = `url(images/backgrounds/default-fallback.jpg)`;
+    try {
+        const data = await getWeatherData(location, unit);
+
+        if (data) {
+            dom.addressDisplay.textContent = data.address;
+            dom.tempDisplay.textContent = data.temp + '°';
+            dom.conditionsDisplay.textContent = data.conditions;
+            dom.conditionForecastDisplay.textContent = data.conditionForecast;
+            dom.feelsLikeTempDisplay.textContent = data.feelsLike + '°';
+            dom.humidityDisplay.textContent = data.humidity + '%';
+            dom.minTempDisplay.textContent = data.minTemp + '°';
+            dom.maxTempDisplay.textContent = data.maxTemp + '°';
+            dom.uvIndexDisplay.textContent = data.uvIndex;
+            dom.visibilityDisplay.textContent = data.visibility;
+            
+            //Background rendering
+            const hourString = data.dateTime.substring(0, 2);
+            const hour = parseInt(hourString);
+            const backgroundBaseName = getBackGroundPath(hour, data.icon);
+            
+            try {
+                //Dynamic import
+                const imageModule = await import (
+                    /* webpackInclude: /\.jpg$/ */
+                    `./images/backgrounds/${backgroundBaseName}.jpg`
+                );
+                console.log(imageModule);
+                document.body.style.backgroundImage = `url(${imageModule.default})`;
+
+            } catch (error) {
+                console.error(`Error loading background image for ${backgroundBaseName}.jpg:`, error);
+                document.body.style.backgroundImage = `url(images/backgrounds/default-fallback.jpg)`;
+            }
         }
+    } finally {
+        hideloading();
     }
+    
 });
 
 async function getWeatherData (location, unit) {
@@ -97,7 +109,7 @@ async function getWeatherData (location, unit) {
 
     } catch (error) {
         console.error("Failed to fetch weather data:", error);
-        alert(`Could nmot retrieve weather data: ${error.message}`);
+        alert(`Could not retrieve weather data: ${error.message}`);
         return null
     }
 };
@@ -140,4 +152,30 @@ function getBackGroundPath (hour, icon) {
     return `${timePrefix}-${weatherSuffix}`;
 };
 
-// getWeatherData('london', 'metric');
+function showloading() {
+    dom.loadingOverlay.classList.remove('hidden');
+    loadingStartTime = Date.now();
+    if (dom.loadingTimer) {dom.loadingTimer.textContent = '00:00'};
+
+    //Update the time every second
+    loadingTimeinterval = setInterval(() => {
+        const elapsedTime = Date.now() - loadingStartTime;
+        const seconds = Math.floor(elapsedTime / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+
+        const formattedMinutes = String(minutes).padStart(2, '0');
+        const formattedSeconds = String(remainingSeconds).padStart(2, '0');
+
+        dom.loadingTimer.textContent = `${formattedMinutes}:${formattedSeconds}`;
+    }, 1000);
+}
+
+function hideloading() {
+    if (dom.loadingOverlay) {
+        dom.loadingOverlay.classList.add('hidden');
+        clearInterval(loadingTimeinterval);
+        loadingStartTime = null;
+    }   
+}
+ 
