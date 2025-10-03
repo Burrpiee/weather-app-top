@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather app</title>
+<script defer src="main.js"></script></head>
+<body>
+    <div class="header">
+        <img class="app-logo" src="6c4272135110d4193706.svg">
+        <form class="weather-form" id="weather-form">
+            <div class="location-container">
+                <label for="location-input">Location:</label>
+                <input type="text" id="location-input" placeholder="Enter City Name" required>
+            </div>
+            <div class="unit-input">
+                <label for="unit">Unit:</label>
+                <select name="unit" id="unit">
+                    <option value="metric">Metric</option>
+                    <option value="us">Imperial</option>
+                </select>
+            </div>
+            <button type="submit">Get weather</button>
+        </form>
+    </div>
+    <div class="content">
+        <div class="weather-container">
+            <div class="weather-header">
+                <div id="address">Singapore</div>
+                <div id="temp">30&#176</div>
+                <div id="conditions">Partially cloudy</div>
+            </div>
+            <div class="weather-info">
+                <div id="condition-forecast">Similar temperatures continuing with no rain expected.</div>
+                <div class="data-group">
+                    <div class="data-block">
+                        <h5 class="data-title">Feels like:</h5>
+                        <div class="data-font" id="feels-like-temp">30&#176</div>
+                    </div>
+                    <div class="data-block">
+                        <h5 class="data-title">Humidity:</h5>
+                        <div class="data-font" id="humidity">70%</div>
+                    </div> 
+                    <div class="data-block">
+                        <h5 class="data-title">Min temp:</h5>
+                        <div class="data-font" id="min-temp">30&#176</div>
+                    </div>
+                    <div class="data-block">
+                        <h5 class="data-title">Max temp:</h5>
+                        <div class="data-font" id="max-temp">30&#176</div>
+                    </div>
+                    <div class="data-block">
+                        <h5 class="data-title">UV index:</h5>
+                        <div class="data-font" id="uv-index">2</div>
+                    </div>
+                    <div class="data-block">
+                        <h5 class="data-title">Visibility:</h5>
+                        <div class="data-font" id="visibility">10</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner"></div>
+        <div class="loading-message">Fetching weather data...</div>
+        <div id="loading-timer" class="loading-timer">00:00</div>
+    </div>
+</body>
+</html>
